@@ -168,8 +168,8 @@ int main(){
         printf("3 - inorder traversal\n");
         printf("4 - postorder traversal\n");
         printf("5 - preorder traversal\n");
-        printf("6 - end of execution\n");
-        printf("7 - search a node\n");
+        printf("6 - search a node\n");
+        printf("7 - end of execution\n");
         scanf("%d", &option);
     
     switch(option){
@@ -212,12 +212,8 @@ int main(){
             Preorder(root);
             break;
         }
-            
-        case 6:{
-            return 0;
-        }
         
-        case 7:{
+        case 6:{
             printf("Which node do you want to find? : ");
             scanf("%d", &val);
             
@@ -230,6 +226,10 @@ int main(){
             }
             
             break;
+        }
+        
+        case 7:{
+            return 0;
         }
     }
     }
