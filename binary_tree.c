@@ -66,6 +66,68 @@ struct node *insert(struct node *node, int data){
 }
 
 
+struct node *min(struct node *node){
+    
+    struct node *temp = node;
+    while (temp != NULL  && temp->left != NULL){
+        temp = temp->left;
+    }
+    return temp;
+}
+
+
+struct node *delete(struct node *node, int data){
+    
+    if (node == NULL){
+        return node;
+    }
+    
+    if (data < node->data){
+        node->left = delete(node->left, data);
+    }
+    
+    if (data > node->data){
+        node->right = delete(node->right, data);
+    }
+    
+    if (node->left == NULL){
+        struct node *temp = node->right;
+        free(node);
+        return temp;
+    }
+    
+    if (node->right == NULL){
+        struct node *temp = node->left;
+        free(node);
+        return temp;
+    }
+    
+    struct node *temp = min(node->right);
+    node->data = temp->data;
+    node->right = delete(node->right, temp->data);
+   
+    return node;
+}
+
+
+struct node *search(struct node *node, int data){
+    
+    if (node == NULL || node->data == data){
+        return node;
+    }
+    
+    if (node->data < data){
+        node = search(node->right, data);
+    }
+   
+    else if (node-> data > data){
+        node = search(node->left, data);
+    }
+    
+    return node;
+}
+
+
 void Inorder(struct node *node){
     if (node != NULL){
         Inorder(node->left);
@@ -102,10 +164,12 @@ int main(){
         
         printf("Select the option:\n");
         printf("1 - insert new node\n");
-        printf("2 - inorder traversal\n");
-        printf("3 - postorder traversal\n");
-        printf("4 - preorder traversal\n");
-        printf("5 - end of execution\n");
+        printf("2 - delete an element\n");
+        printf("3 - inorder traversal\n");
+        printf("4 - postorder traversal\n");
+        printf("5 - preorder traversal\n");
+        printf("6 - end of execution\n");
+        printf("7 - search a node\n");
         scanf("%d", &option);
     
     switch(option){
@@ -123,22 +187,49 @@ int main(){
         }
             
         case 2:{
-            Inorder(root);
+            printf("What element do you want to delete? : ");
+            scanf("%d", &val);
+            if (root == NULL){
+                return 0;
+            }
+            else {
+                delete(root, val);
+            }
             break;
         }
             
         case 3:{
-            Postorder(root);
+            Inorder(root);
             break;
         }
             
         case 4:{
-            Preorder(root);
+            Postorder(root);
             break;
         }
             
         case 5:{
+            Preorder(root);
+            break;
+        }
+            
+        case 6:{
             return 0;
+        }
+        
+        case 7:{
+            printf("Which node do you want to find? : ");
+            scanf("%d", &val);
+            
+            if (search(root, val)) {
+                printf("The node exists\n");
+            }
+            
+            else {
+                printf("The node was not found in the tree\n");
+            }
+            
+            break;
         }
     }
     }
