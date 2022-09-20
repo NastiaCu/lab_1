@@ -265,6 +265,22 @@ void BTtoBST(struct node *node){
 }
 
 
+void traversal(struct node *node, FILE *file){
+    
+    if(file == NULL){
+        printf("Can't open the file\n");
+        exit(1);
+    }
+    
+
+    if (node != NULL){
+        traversal(node->left, file);
+        fprintf(file, "%d -> ", node->data);
+        traversal(node->right, file);
+    }
+}
+
+
 //write the binary tree to a file
 void serialize(struct node *node, char name[]){
     FILE* file = fopen(name, "w");
@@ -274,9 +290,10 @@ void serialize(struct node *node, char name[]){
         exit(1);
     }
     
-    while(node != NULL)
-    {
-        fprintf(file, " %d ->", node->data);
+    fprintf(file, " %d ->", node->data);
+
+    while(node != NULL){
+        
         if (node->right != NULL){
             fprintf(file, " %d ->", node->right->data);
         }
@@ -299,9 +316,10 @@ void deserialize(struct node **node, char name[]){
         exit(2);
     }
     
-    int val = 0;
-    while(fscanf(file, " %d ->", &val) > 0)
+    int val = 1;
+    while(val)
     {
+        fscanf(file, " %d ->", &val);
         insert(*node, val);
     }
     fclose(file);
@@ -309,6 +327,9 @@ void deserialize(struct node **node, char name[]){
 
 
 int main(){
+    
+    FILE* file = fopen("amogus.txt", "w");
+
     
     struct node *root = NULL;
     int option = 0, val = 0;
@@ -396,7 +417,9 @@ int main(){
         }
             
         case 9:{
-            serialize(root, "file.txt");
+            
+            traversal(root, file);
+//            serialize(root, "file.txt");
             break;
         }
         
