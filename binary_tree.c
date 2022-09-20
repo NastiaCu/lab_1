@@ -155,18 +155,16 @@ void Preorder(struct node *node){
 }
 
 
-void store(struct node *node){
-    int arr[101];
-    int index = 0;
-    
+void store(struct node *node, int inorder[], int *index){
+   
     if (node == NULL){
         return;
     }
     else{
-        store(node->left);
-        arr[index] = node->data;
-        (index)++;
-        store(node->right);
+        store(node->left, inorder, index);
+        inorder[*index] = node->data;
+        (*index)++;
+        store(node->right, inorder, index);
     }
 }
 
@@ -186,7 +184,7 @@ int count(struct node *node){
 }
 
 
-void arrToBT(struct node *node, int arr[], int *index){
+void arrToBT(struct node *node, int *arr, int *index){
     
     if (node == NULL){
         return;
@@ -255,12 +253,13 @@ void BTtoBST(struct node *node){
     
     else {
         int n = count(node);
-        int *arr = NULL;
+        int *arr = malloc(n * sizeof(*arr));
         int i = 0;
-        store(node);
+        store(node, arr, &i);
         HeapSort(arr, n);
         i = 0;
         arrToBT(node, arr, &i);
+        free(arr);
     }
         
 }
