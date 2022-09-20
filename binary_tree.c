@@ -307,6 +307,7 @@ void serialize(struct node *node, char name[]){
 }
 
 
+
 //read the binary tree from a file
 void deserialize(struct node **node, char name[]){
     FILE* file = fopen(name, "r");
@@ -317,10 +318,10 @@ void deserialize(struct node **node, char name[]){
     }
     
     int val = 1;
-    while(val)
-    {
+    while(val){
         fscanf(file, " %d ->", &val);
         insert(*node, val);
+        
     }
     fclose(file);
 }
@@ -328,7 +329,7 @@ void deserialize(struct node **node, char name[]){
 
 int main(){
     
-    FILE* file = fopen("amogus.txt", "w");
+    FILE* file = fopen("file.txt", "w");
 
     
     struct node *root = NULL;
