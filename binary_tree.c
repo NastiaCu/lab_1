@@ -160,6 +160,7 @@ void store(struct node *node, int inorder[], int *index){
     if (node == NULL){
         return;
     }
+    
     else{
         store(node->left, inorder, index);
         inorder[*index] = node->data;
@@ -213,7 +214,7 @@ void heapify(int arr[], int n, int i){
     
     int largest = i;
     int left = 2 * i + 1;
-    int right = 2 * i + 1;
+    int right = 2 * i + 2;
     
     if (left < n && arr[left] > arr[largest]){
         largest = left;
@@ -281,6 +282,64 @@ void traversal(struct node *node, FILE *file){
 }
 
 
+struct node *readTree(struct node *node, int data){
+    
+    int option;
+ 
+    if (node == NULL){
+        return newNode(data);
+    }
+    
+    else{
+        printf("Current element: %d\n", node->data);
+        
+        if (node->left != NULL){
+            printf("Left element: %d\n", node->left->data);
+        }
+        
+        else{
+            printf("Left side is empty\n");
+        }
+        
+        if (node->right != NULL){
+            printf("Right element: %d\n", node->right->data);
+        }
+        
+        else{
+            printf("Right side is empty\n");
+        }
+        
+        printf("Add: 1 - left, 2 - right\n");
+        printf("Press 0 to quit\n");
+        scanf("%d", &option);
+        
+        switch(option){
+            
+            case 1:{
+                node->left = readTree(node->left, data);
+                break;
+            }
+                
+            case 2:{
+                node->right = readTree(node->right, data);
+                break;
+            }
+            
+            case 0:{
+                exit(1);
+                break;
+            }
+                
+            default:{
+                break;
+            }
+        }
+    }
+        
+    return node;
+}
+
+
 //write the binary tree to a file
 void serialize(struct node *node, char name[]){
     FILE* file = fopen(name, "w");
@@ -320,7 +379,7 @@ void deserialize(struct node **node, char name[]){
     int val = 1;
     while(val){
         fscanf(file, " %d ->", &val);
-        insert(*node, val);
+        readTree(*node, val);
         
     }
     fclose(file);
@@ -420,6 +479,7 @@ int main(){
         case 9:{
             
             traversal(root, file);
+            printf("The binary tree was added to the file\n");
 //            serialize(root, "file.txt");
             break;
         }
