@@ -1,6 +1,6 @@
 default: build run
 
-source_name = binary_tree.c
+source_name = main.c
 executable_name = lab_1
 
 build:

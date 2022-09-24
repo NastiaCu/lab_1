@@ -310,6 +310,9 @@ struct node *readTree(struct node *node, int data){
         }
         
         printf("Add: 1 - left, 2 - right\n");
+        printf("press 3 to insert an element\n");
+        printf("press 4 to delete an element\n");
+        printf("press 5 to search an element\n");
         printf("Press 0 to quit\n");
         scanf("%d", &option);
         
@@ -325,6 +328,42 @@ struct node *readTree(struct node *node, int data){
                 break;
             }
             
+            case 3:{
+                int val;
+                printf("What value do you want to add? :");
+                scanf("%d", &val);
+                insert(node, val);
+                break;
+            }
+                
+            case 4:{
+                int val;
+                printf("What value do you want to delete? :");
+                scanf("%d", &val);
+                delete(node, data);
+                break;
+            }
+                
+            case 5:{
+                int val;
+                printf("What value do you want to find? :");
+                scanf("%d", &val);
+                search(node, data);
+                break;
+            }
+                
+            case 6:{
+                Inorder(node);
+            }
+                
+            case 7:{
+                Preorder(node);
+            }
+                
+            case 8:{
+                Postorder(node);
+            }
+                
             case 0:{
                 exit(1);
                 break;
