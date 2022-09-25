@@ -21,12 +21,12 @@ void append(struct node **head, int data){
         return;
     }
     
-        while (last->next != NULL){
-            last = last->next;
-        }
+    while (last->next != NULL){
+        last = last->next;
+    }
         
-        last->next = new;
-        return;
+    last->next = new;
+    return;
     
 }
 
@@ -99,7 +99,7 @@ void insertAt(struct node **head, int pos, int data){
         
     }
     
-    if ((*head == NULL) || (pos = size(*head)+1)){
+    if ((*head == NULL) || (pos >= size(*head))){
         append(head, data);
         return;
     }
@@ -174,20 +174,110 @@ void sort(struct node **head){
 }
 
 
+void search(struct node *head, int data){
+    
+    if (head == NULL){
+        printf("The linked list is empty. Nothing to serch.\n");
+        return;
+    }
+    
+    int pos = 1;
+    
+    while (head->next != NULL && head->data != data){
+        pos++;
+        head = head->next;
+    }
+    if (head->data != data){
+        printf("The value doesn't exist.\n");
+        return;
+    }
+        
+    if (head->data == data){
+        printf("The value is at %d position.\n", pos);
+        return;
+    }
+}
+
+
+struct node *join(struct node *list1, struct node *list2){
+    struct node *joined = NULL;
+    
+    
+    if (list1 == NULL || list2 == NULL){
+        printf("Nothing to join.\n");
+        return 0;
+    }
+    
+    while (list1 != NULL){
+        append(&joined, list1->data);
+        list1 = list1->next;
+    }
+    
+    while (list2 != NULL){
+        append(&joined, list2->data);
+        list2 = list2->next;
+    }
+
+    return joined;
+}
+
+
 void print(struct node *node){
     while (node != NULL){
         printf(" %d ->", node->data);
         node = node->next;
     }
-        printf(" NULL\n");
+    printf(" NULL\n");
+}
+
+
+void serialize(struct node *head, char name[]){
+    FILE* file = fopen(name, "w");
+
+    if(file == NULL){
+        printf("Can't open the file\n");
+        exit(1);
+    }
+    
+
+    while(head != NULL){
+        fprintf(file, " %d ->", head->data);
+        head = head->next;
+    }
+
+    fprintf(file, " NULL");
+    fclose(file);
+}
+
+
+void deserialize(struct node *head, char name[]){
+    FILE* file = fopen(name, "r");
+    struct node *node = NULL;
+
+    if(file == NULL){
+        printf("Can't read the file\n");
+        exit(2);
+    }
+    
+    int val = 0;
+    while((fscanf(file, " %d ->", &val)) > 0){
+        append(&node, val);
+    }
+
+    fclose(file);
+    
 }
 
 
 int main(){
-    struct node *head = NULL;
+    struct node *arr[4] = {NULL};
     
+    int head = 1;
     int option = 0, val = 0;
     int pos = 0;
+    int list1 = 0, list2 = 0;
+    
+    char file_name[101] = {0};
     
     while(1){
         
@@ -201,9 +291,10 @@ int main(){
         printf("7 - Search for a value\n");
         printf("8 - Join two linked lists\n");
         printf("9 - Backwards traversal, use double-linked-list\n");
-        printf("10 - load the data in a new file\n");
-        printf("11 - read from a file\n");
-        printf("0 - end of execution\n");
+        printf("10 - Load the data in a new file\n");
+        printf("11 - Read from a file\n");
+        printf("12 - Choose the list\n");
+        printf("0 - End of execution\n");
         scanf("%d", &option);
     
     switch(option){
@@ -211,8 +302,8 @@ int main(){
         case 1:{
             printf("Enter the value you want to append: ");
             scanf("%d", &val);
-            append(&head, val);
-            print(head);
+            append(&arr[head], val);
+            print(arr[head]);
             
             break;
         }
@@ -220,15 +311,15 @@ int main(){
         case 2:{
             printf("Enter the value you want to prepend: ");
             scanf("%d", &val);
-            prepend(&head, val);
-            print(head);
+            prepend(&arr[head], val);
+            print(arr[head]);
           
             break;
         }
             
         case 3:{
-            reverse(&head);
-            print(head);
+            reverse(&arr[head]);
+            print(arr[head]);
             
             break;
         }
@@ -238,8 +329,8 @@ int main(){
             scanf("%d", &val);
             printf("Enter the position: ");
             scanf("%d", &pos);
-            insertAt(&head, pos, val);
-            print(head);
+            insertAt(&arr[head], pos, val);
+            print(arr[head]);
             
             break;
         }
@@ -247,25 +338,34 @@ int main(){
         case 5:{
             printf("Enter the position: ");
             scanf("%d", &pos);
-            remoreFrom(&head, pos);
-            print(head);
+            remoreFrom(&arr[head], pos);
+            print(arr[head]);
+            
             break;
         }
             
         case 6:{
-            sort(&head);
-            print(head);
+            sort(&arr[head]);
+            print(arr[head]);
          
             break;
         }
             
         case 7:{
+            printf("Enter the value you want to find: ");
+            scanf("%d", &val);
+            search(arr[head], val);
           
             break;
         }
         
         case 8:{
+            printf("What two lists should be joined?: ");
+            scanf("%d %d", &list1, &list2);
             
+            arr[head] = join(arr[list1], arr[list2]);
+            print(arr[head]);
+           
             break;
         }
             
@@ -275,21 +375,37 @@ int main(){
         }
         
         case 10:{
+            printf("Type the name of a file: \n");
+            scanf("%s", file_name);
+            serialize(arr[head], file_name);
             
             break;
         }
             
         case 11:{
+            deserialize(arr[head], file_name);
+            print(arr[head]);
             
             break;
             
         }
-            
+        
+        case 12:{
+            for(int i=1;i<4;i++){
+                print(arr[i]);
+            }
+
+            printf("Choose the list: \n");
+            scanf("%d", &head);
+            break;
+        }   
+
         case 0:{
             return 0;
         }
             
         default:{
+            printf("Try again\n");
             break;
         }
     }
