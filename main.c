@@ -4,6 +4,7 @@
 struct node{
     int data;
     struct node *next;
+    struct node *prev;
 };
 
 
@@ -269,6 +270,35 @@ void deserialize(struct node *head, char name[]){
 }
 
 
+void appendDoubly(struct node **head, int data){
+    struct node *new = (struct node*)malloc(sizeof(struct node));
+        
+        
+    new->data = data;
+    new->prev = NULL;
+    new->next = (*head);
+        
+    if (*head != NULL){
+        (*head)->prev = new;
+    }
+        
+    (*head) = new;
+       
+}
+
+void backwards(struct node **head){
+    struct node *new = NULL;
+    struct node *current = (*head);
+
+    while (current != NULL){
+        appendDoubly(&new, current->data);
+        current = current->next;
+    }
+
+    *head = new;
+    return;
+}
+
 int main(){
     struct node *arr[4] = {NULL};
     
@@ -370,6 +400,8 @@ int main(){
         }
             
         case 9:{
+            backwards(&arr[head]);
+            print(arr[head]);
             
             break;
         }
